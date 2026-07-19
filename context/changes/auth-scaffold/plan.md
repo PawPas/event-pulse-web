@@ -259,12 +259,12 @@ No database changes. No data migration. `SECRET_KEY` must be added to Railway's 
 
 #### Automated
 
-- [x] 2.1 All three tests pass: `uv run pytest tests/test_auth.py -v`
-- [x] 2.2 Test collection: `uv run python -m pytest tests/ --collect-only` shows 3 tests
+- [x] 2.1 All three tests pass: `uv run pytest tests/test_auth.py -v` — 72f4a00
+- [x] 2.2 Test collection: `uv run python -m pytest tests/ --collect-only` shows 3 tests — 72f4a00
 
 #### Manual
 
-- [x] 2.3 `curl -s http://localhost:8000/api/me` → HTTP 401
-- [x] 2.4 Valid token curl → HTTP 200 with correct payload
-- [x] 2.5 Tampered token curl → HTTP 401
-- [x] 2.6 `curl http://localhost:8000/health` still → HTTP 200
+- [x] 2.3 `curl -s http://localhost:8000/api/me` → HTTP 401 — 72f4a00
+- [x] 2.4 Valid token curl → HTTP 200 with correct payload — 72f4a00
+- [x] 2.5 Tampered token curl → HTTP 401 — 72f4a00
+- [x] 2.6 `curl http://localhost:8000/health` still → HTTP 200 — 72f4a00
