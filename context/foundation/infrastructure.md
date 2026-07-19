@@ -159,7 +159,7 @@ How Railway actually operates day to day. One concrete answer per line.
 | Remote MCP unreliable for autonomous agent ops | Devil's advocate | M | M | Use local MCP (`railway mcp install`) as the only agent-facing MCP path; treat `mcp.railway.com` as experimental |
 | Sleep mode accidentally enabled on worker, tasks silently dropped | Devil's advocate | L | H | Explicitly verify sleep mode is OFF on all services; document in team runbook |
 | Hobby plan RAM spike overruns $5 monthly credit | Unknown unknowns | M | L | Monitor usage in Railway dashboard; set a billing alert at $4; upgrade to Pro ($20) if RFM analysis jobs regularly spike above 256MB RAM |
-| Railway Postgres has no automatic backups by default | Unknown unknowns | H | H | Enable automated backups in Railway Postgres service settings on day 1; Pro plan required for PITR |
+| Railway Postgres has no automatic backups on Hobby plan | Unknown unknowns | H | H | Automatic backups require Pro plan ($20/month); on Hobby, schedule manual `pg_dump` via cron or Railway one-off job once schema stabilises |
 | Hardcoded `localhost` breaks inter-service communication | Unknown unknowns | M | H | Always use `$DATABASE_URL` / `$REDIS_URL` from Railway's injected env vars; never hardcode `localhost` for dependent services |
 | `railway up` ships uncommitted local changes to production | Unknown unknowns | M | M | Connect Railway to GitHub repo; use git push as the only deploy trigger; ban `railway up` from CI scripts |
 | RFM analysis stack over-engineered with distributed tech | Research finding | H (resolved) | H | Cassandra + Spark dropped in favour of Pandas + Postgres; decision recorded here as resolved |

@@ -244,27 +244,27 @@ No database changes. No data migration. `SECRET_KEY` must be added to Railway's 
 
 #### Automated
 
-- [x] 1.1 Import check — auth.security: `uv run python -c "from auth.security import create_access_token, hash_password, verify_password, decode_access_token; print('ok')"`
-- [x] 1.2 Import check — auth.dependencies: `uv run python -c "from auth.dependencies import get_current_user; print('ok')"`
-- [x] 1.3 Import check — auth.schemas: `uv run python -c "from auth.schemas import TokenPayload; print('ok')"`
-- [x] 1.4 Lock file regenerated: `uv.lock` contains `pyjwt` and `bcrypt` entries
+- [x] 1.1 Import check — auth.security: `uv run python -c "from auth.security import create_access_token, hash_password, verify_password, decode_access_token; print('ok')"` — 9080536
+- [x] 1.2 Import check — auth.dependencies: `uv run python -c "from auth.dependencies import get_current_user; print('ok')"` — 9080536
+- [x] 1.3 Import check — auth.schemas: `uv run python -c "from auth.schemas import TokenPayload; print('ok')"` — 9080536
+- [x] 1.4 Lock file regenerated: `uv.lock` contains `pyjwt` and `bcrypt` entries — 9080536
 
 #### Manual
 
-- [x] 1.5 `uv run uvicorn main:app --reload` starts without error
-- [x] 1.6 `curl http://localhost:8000/health` returns `{"status":"ok"}`
-- [x] 1.7 Review `auth/security.py` — four functions present, no `SECRET_KEY` at module level
+- [x] 1.5 `uv run uvicorn main:app --reload` starts without error — 9080536
+- [x] 1.6 `curl http://localhost:8000/health` returns `{"status":"ok"}` — 9080536
+- [x] 1.7 Review `auth/security.py` — four functions present, no `SECRET_KEY` at module level — 9080536
 
 ### Phase 2: Wire stub endpoint and tests
 
 #### Automated
 
-- [ ] 2.1 All three tests pass: `uv run pytest tests/test_auth.py -v`
-- [ ] 2.2 Test collection: `uv run python -m pytest tests/ --collect-only` shows 3 tests
+- [x] 2.1 All three tests pass: `uv run pytest tests/test_auth.py -v`
+- [x] 2.2 Test collection: `uv run python -m pytest tests/ --collect-only` shows 3 tests
 
 #### Manual
 
-- [ ] 2.3 `curl -s http://localhost:8000/api/me` → HTTP 401
-- [ ] 2.4 Valid token curl → HTTP 200 with correct payload
-- [ ] 2.5 Tampered token curl → HTTP 401
-- [ ] 2.6 `curl http://localhost:8000/health` still → HTTP 200
+- [x] 2.3 `curl -s http://localhost:8000/api/me` → HTTP 401
+- [x] 2.4 Valid token curl → HTTP 200 with correct payload
+- [x] 2.5 Tampered token curl → HTTP 401
+- [x] 2.6 `curl http://localhost:8000/health` still → HTTP 200
