@@ -1,9 +1,20 @@
-from fastapi import Depends, FastAPI
+from contextlib import asynccontextmanager
+
+from fastapi import Depends, FastAPI, HTTPException, status
 
 from auth.dependencies import get_current_user
 from auth.schemas import TokenPayload
+from database import _get_engine, close_engine, engine_health_check
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    _get_engine()
+    yield
+    await close_engine()
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/health")
@@ -14,3 +25,14 @@ def health():
 @app.get("/api/me")
 def me(current_user: TokenPayload = Depends(get_current_user)) -> TokenPayload:
     return current_user
+
+
+@app.get("/api/health/db")
+async def health_db():
+    ok = await engine_health_check()
+    if not ok:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="db unavailable",
+        )
+    return {"db": "ok"}
