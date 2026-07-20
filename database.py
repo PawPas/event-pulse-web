@@ -22,7 +22,7 @@ def _get_engine() -> AsyncEngine:
         # Railway (and most providers) emit postgresql:// — coerce to asyncpg driver.
         if url.startswith("postgresql://"):
             url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
-        _engine_instance = create_async_engine(url, echo=False)
+        _engine_instance = create_async_engine(url, echo=False, pool_pre_ping=True)
         _session_factory_instance = async_sessionmaker(
             _engine_instance, expire_on_commit=False
         )
