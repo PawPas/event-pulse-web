@@ -1,9 +1,9 @@
 ---
 change_id: db-schema-baseline
 roadmap_id: F-02
-status: implementing
+status: implemented
 created: 2026-07-19
-updated: 2026-07-19
+updated: 2026-07-20
 
 ---
 

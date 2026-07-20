@@ -418,11 +418,11 @@ This ensures migrations run before the server starts on every deploy.
 
 #### Automated
 
-- [x] 3.1 All tests pass: `uv run pytest tests/ -v` (test_auth.py + test_db_health.py)
-- [x] 3.2 Alembic current: `DATABASE_URL=<url> uv run alembic current` shows initial_schema as (head)
+- [x] 3.1 All tests pass: `uv run pytest tests/ -v` (test_auth.py + test_db_health.py) — 4ff334c
+- [x] 3.2 Alembic current: `DATABASE_URL=<url> uv run alembic current` shows initial_schema as (head) — 4ff334c
 
 #### Manual
 
-- [x] 3.3 Round-trip: `alembic downgrade base` then `alembic upgrade head` both succeed
-- [x] 3.4 Tables visible in Postgres: `users`, `reports`, `events` with expected columns
-- [x] 3.5 Health endpoint on Railway: `curl https://<api-url>/api/health/db` → `{"db":"ok"}`
+- [x] 3.3 Round-trip: `alembic downgrade base` then `alembic upgrade head` both succeed — 4ff334c
+- [x] 3.4 Tables visible in Postgres: `users`, `reports`, `events` with expected columns — 4ff334c
+- [x] 3.5 Health endpoint on Railway: `curl https://<api-url>/api/health/db` → `{"db":"ok"}` — 4ff334c
