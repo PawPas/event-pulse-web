@@ -3,7 +3,7 @@ project: "EventPulse Web"
 version: 1
 status: draft
 created: 2026-07-17
-updated: 2026-07-17
+updated: 2026-07-20
 prd_version: 1
 main_goal: market-feedback
 top_blocker: capacity
@@ -31,7 +31,7 @@ Small and medium e-commerce and SaaS product managers have customer event data i
 | ---- | ---------------------- | --------------------------------------------------------------- | ------------- | ------------------------------ | -------- |
 | F-01 | auth-scaffold          | (foundation) auth middleware wired; protected routes return 401 | —             | FR-001, FR-002, Access Control | ready    |
 | F-02 | db-schema-baseline     | (foundation) ORM + Alembic migrations for User, Report, Event tables applied | — | Business Logic §Event schema, Access Control | ready |
-| S-01 | auth-flows             | register with email/password, log in, and log out              | F-01, F-02    | FR-001, FR-002, FR-003         | proposed |
+| S-01 | auth-flows             | register with email/password, log in, and log out              | F-01, F-02    | FR-001, FR-002, FR-003         | done     |
 | S-02 | report-management      | create a report, view the list, open it, and delete it         | S-01          | FR-004, FR-005, FR-006, FR-007 | proposed |
 | S-03 | event-file-upload      | add customer events to a report by uploading CSV or JSON       | S-02          | FR-008                         | proposed |
 | S-04 | sample-generator       | add sample customer events to a report in one click            | S-02          | FR-009                         | proposed |
@@ -98,7 +98,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** email + password auth is well-understood; PRD explicitly locked this model (no OAuth, no passwordless) so no decision drift expected; main risk is token storage and expiry edge cases on the frontend
-- **Status:** proposed
+- **Status:** done
 
 ### S-02: User can manage reports
 
@@ -184,4 +184,4 @@ Items from PRD §Non-Goals — deferred from MVP scope.
 
 ## Done
 
-(Empty on first generation. `/10x-archive` appends entries here when a change whose `Change ID` matches a roadmap item is archived.)
+- **S-01: register with email/password, log in, and log out** — Archived 2026-07-20 → `context/archive/2026-07-20-auth-flows/`. Lesson: —.
