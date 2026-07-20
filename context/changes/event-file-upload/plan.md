@@ -289,14 +289,14 @@ Covered in `tests/test_events.py` — 13 named cases spanning auth, isolation, f
 
 #### Automated
 
-- [x] 2.1 Frontend builds without type errors: `cd frontend && npm run build`
-- [x] 2.2 Lint passes: `cd frontend && npm run lint`
+- [x] 2.1 Frontend builds without type errors: `cd frontend && npm run build` — 48937c2
+- [x] 2.2 Lint passes: `cd frontend && npm run lint` — 48937c2
 
 #### Manual
 
-- [x] 2.3 Upload valid CSV on ReportDetail; see success message and updated event count
-- [x] 2.4 Upload valid JSON; same success flow
-- [x] 2.5 Select CSV > 200k lines; client-side rejection before network call
-- [x] 2.6 Upload CSV with missing field; backend error displayed in red
-- [x] 2.7 "Run Analysis" button disabled before upload, enabled after
-- [x] 2.8 Delete modal still works after upload UI changes
+- [x] 2.3 Upload valid CSV on ReportDetail; see success message and updated event count — 48937c2
+- [x] 2.4 Upload valid JSON; same success flow — 48937c2
+- [x] 2.5 Select CSV > 200k lines; client-side rejection before network call — 48937c2
+- [x] 2.6 Upload CSV with missing field; backend error displayed in red — 48937c2
+- [x] 2.7 "Run Analysis" button disabled before upload, enabled after — 48937c2
+- [x] 2.8 Delete modal still works after upload UI changes — 48937c2
