@@ -28,5 +28,6 @@ export async function apiFetch(path: string, options: RequestInit = {}): Promise
     throw new ApiError(response.status, body.detail ?? response.statusText)
   }
 
+  if (response.status === 204) return null
   return response.json()
 }

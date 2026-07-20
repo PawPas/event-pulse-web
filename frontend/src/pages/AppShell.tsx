@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, Link } from 'react-router-dom'
 import { useAppDispatch } from '../hooks/useAppDispatch'
 import { useAppSelector } from '../hooks/useAppSelector'
 import { logout } from '../store/authSlice'
@@ -22,7 +22,10 @@ export default function AppShell() {
   return (
     <>
       <nav style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 24px', borderBottom: '1px solid #eee' }}>
-        <span>{email}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <Link to="/" style={{ fontWeight: 600, textDecoration: 'none' }}>EventPulse</Link>
+          <span style={{ color: '#888' }}>{email}</span>
+        </div>
         <button type="button" onClick={handleLogout}>Logout</button>
       </nav>
       <main style={{ padding: 24 }}>

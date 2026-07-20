@@ -336,32 +336,32 @@ No Alembic migration needed. The `reports` and `events` tables were created by t
 
 #### Automated
 
-- [x] 1.1 New tests pass: `uv run pytest tests/test_reports.py -v` (9/9)
-- [x] 1.2 Full suite passes: `uv run pytest tests/ -v` (19/19)
-- [x] 1.3 Import check: `uv run python -c "from routers.reports import router; print('ok')"`
+- [x] 1.1 New tests pass: `uv run pytest tests/test_reports.py -v` (9/9) — 5c2d6c2
+- [x] 1.2 Full suite passes: `uv run pytest tests/ -v` (19/19) — 5c2d6c2
+- [x] 1.3 Import check: `uv run python -c "from routers.reports import router; print('ok')"` — 5c2d6c2
 
 #### Manual
 
-- [x] 1.4 `curl POST /api/reports/` with token → 201 with `id` and `event_count: 0`
-- [x] 1.5 `curl GET /api/reports/` → list with 1 report
-- [x] 1.6 `curl DELETE /api/reports/<id>` → 204
-- [x] 1.7 Request without token → 401
+- [x] 1.4 `curl POST /api/reports/` with token → 201 with `id` and `event_count: 0` — 5c2d6c2
+- [x] 1.5 `curl GET /api/reports/` → list with 1 report — 5c2d6c2
+- [x] 1.6 `curl DELETE /api/reports/<id>` → 204 — 5c2d6c2
+- [x] 1.7 Request without token → 401 — 5c2d6c2
 
 ### Phase 2: Frontend report pages + routing
 
 #### Automated
 
-- [ ] 2.1 Build passes: `cd frontend && npm run build`
-- [ ] 2.2 Lint passes: `cd frontend && npm run lint`
+- [x] 2.1 Build passes: `cd frontend && npm run build`
+- [x] 2.2 Lint passes: `cd frontend && npm run lint`
 
 #### Manual
 
-- [ ] 2.3 Unauthenticated `/` redirects to `/login`
-- [ ] 2.4 Empty list → "No reports yet…" empty state shown
-- [ ] 2.5 Inline create form → report appears in list
-- [ ] 2.6 Click report → detail page with disabled "Run Analysis" button
-- [ ] 2.7 Delete modal on detail page → confirm → navigates to `/`, report gone
-- [ ] 2.8 Delete modal on list → cancel keeps report, confirm removes it
-- [ ] 2.9 Unknown report URL → "Report not found." with back link
-- [ ] 2.10 `uv run pytest tests/ -v` — all 19 pass (regression)
-- [ ] 2.11 AppShell "EventPulse" link navigates to `/`
+- [x] 2.3 Unauthenticated `/` redirects to `/login`
+- [x] 2.4 Empty list → "No reports yet…" empty state shown
+- [x] 2.5 Inline create form → report appears in list
+- [x] 2.6 Click report → detail page with disabled "Run Analysis" button
+- [x] 2.7 Delete modal on detail page → confirm → navigates to `/`, report gone
+- [x] 2.8 Delete modal on list → cancel keeps report, confirm removes it
+- [x] 2.9 Unknown report URL → "Report not found." with back link
+- [x] 2.10 `uv run pytest tests/ -v` — all 19 pass (regression)
+- [x] 2.11 AppShell "EventPulse" link navigates to `/`

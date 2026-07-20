@@ -2,7 +2,8 @@ import { Routes, Route } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import AppShell from './pages/AppShell'
-import Dashboard from './pages/Dashboard'
+import ReportList from './pages/ReportList'
+import ReportDetail from './pages/ReportDetail'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
           </ProtectedRoute>
         }
       >
-        <Route index element={<Dashboard />} />
+        <Route index element={<ReportList />} />
+        <Route path="reports/:id" element={<ReportDetail />} />
       </Route>
     </Routes>
   )
