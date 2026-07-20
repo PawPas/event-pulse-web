@@ -4,6 +4,7 @@ roadmap_id: F-02
 status: implementing
 created: 2026-07-19
 updated: 2026-07-19
+
 ---
 
 # Database Schema Baseline

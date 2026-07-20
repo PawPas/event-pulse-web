@@ -392,27 +392,27 @@ This ensures migrations run before the server starts on every deploy.
 
 #### Automated
 
-- [x] 1.1 Import check: `uv run python -c "from database import get_db, engine_health_check; print('ok')"`
-- [x] 1.2 Lock file updated: uv.lock contains sqlalchemy, asyncpg, alembic, aiosqlite
-- [x] 1.3 App import check: `uv run python -c "from main import app; print('ok')"`
+- [x] 1.1 Import check: `uv run python -c "from database import get_db, engine_health_check; print('ok')"` — 70af186
+- [x] 1.2 Lock file updated: uv.lock contains sqlalchemy, asyncpg, alembic, aiosqlite — 70af186
+- [x] 1.3 App import check: `uv run python -c "from main import app; print('ok')"` — 70af186
 
 #### Manual
 
-- [x] 1.4 `curl http://localhost:8000/api/health/db` → `{"db":"ok"}` HTTP 200 with DATABASE_URL set
-- [x] 1.5 `curl http://localhost:8000/health` → `{"status":"ok"}` (regression)
-- [x] 1.6 `uv run pytest tests/test_auth.py` still passes (no regressions from lifespan change)
+- [x] 1.4 `curl http://localhost:8000/api/health/db` → `{"db":"ok"}` HTTP 200 with DATABASE_URL set — 70af186
+- [x] 1.5 `curl http://localhost:8000/health` → `{"status":"ok"}` (regression) — 70af186
+- [x] 1.6 `uv run pytest tests/test_auth.py` still passes (no regressions from lifespan change) — 70af186
 
 ### Phase 2: ORM model definitions
 
 #### Automated
 
-- [ ] 2.1 Model import check: `uv run python -c "from models import User, Report, ReportStatus, Event; print('ok')"`
+- [x] 2.1 Model import check: `uv run python -c "from models import User, Report, ReportStatus, Event; print('ok')"`
 
 #### Manual
 
-- [ ] 2.2 Review User model: id (UUID), email (unique), hashed_password, created_at, updated_at, reports relationship
-- [ ] 2.3 Review Report model: id, user_id FK, name, description, status (ReportStatus enum), analyzed_at, timestamps, relationships
-- [ ] 2.4 Review Event model: id, report_id FK, customer_id, timestamp, event_type, amount (Numeric 15,4), two indexes
+- [x] 2.2 Review User model: id (UUID), email (unique), hashed_password, created_at, updated_at, reports relationship
+- [x] 2.3 Review Report model: id, user_id FK, name, description, status (ReportStatus enum), analyzed_at, timestamps, relationships
+- [x] 2.4 Review Event model: id, report_id FK, customer_id, timestamp, event_type, amount (Numeric 15,4), two indexes
 
 ### Phase 3: Alembic setup + initial migration + smoke test
 
