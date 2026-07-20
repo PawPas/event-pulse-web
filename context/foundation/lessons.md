@@ -11,3 +11,13 @@
 **Rule**: Never call `JSON.parse` directly on `localStorage` values at app initialisation. Always use a safe wrapper that catches parse errors and returns a typed fallback. Use `safeJsonParse<T>(value, fallback)` from `frontend/src/utils/safeJsonParse.ts`. Any new slice that reads structured data from `localStorage` as its initial state must go through this helper.
 
 **Applies to**: `implement`, `impl-review`
+
+## Convert avoidable 500s to 4xx at the plan stage
+
+**Context**: Any code path that handles untrusted external input — file uploads, API request bodies, external API responses, database reads of user-supplied data — where a decoding, parsing, or type-checking step can throw an unhandled exception.
+
+**Problem**: Without an explicit plan contract, implementers focus on the happy path. Edge inputs (None filename, non-UTF-8 encoding, non-dict JSON items) cause unhandled exceptions that FastAPI surfaces as 500. These are always fixable with a try/except or a None guard, but they're easy to miss when the contract doesn't call them out.
+
+**Rule**: During plan review (`plan-review`) and implementation review (`impl-review`), scan every inbound data boundary for cases where a Python built-in (`str.endswith`, `bytes.decode`, dict key access) can raise on unexpected but plausible input. Add the 4xx response to the plan contract before implementation begins. Costs one line to specify; costs an incident to discover in production.
+
+**Applies to**: `plan`, `plan-review`, `impl-review`
