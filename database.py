@@ -19,6 +19,9 @@ def _get_engine() -> AsyncEngine:
         url = os.getenv("DATABASE_URL")
         if not url:
             raise RuntimeError("DATABASE_URL environment variable must be set")
+        # Railway (and most providers) emit postgresql:// — coerce to asyncpg driver.
+        if url.startswith("postgresql://"):
+            url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
         _engine_instance = create_async_engine(url, echo=False)
         _session_factory_instance = async_sessionmaker(
             _engine_instance, expire_on_commit=False
