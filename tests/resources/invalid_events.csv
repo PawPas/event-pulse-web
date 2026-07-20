@@ -1,0 +1,6 @@
+customer_id,timestamp,event_type,amount
+c001,2024-01-15T10:30:00Z,purchase,49.99
+c002,not-a-date,purchase,125.00
+c003,2024-01-18T16:45:00Z,purchase,not-a-number
+,2024-01-19T11:00:00Z,page_view,0
+c004,2024-01-20T08:00:00Z,,0

@@ -275,28 +275,28 @@ Covered in `tests/test_events.py` — 13 named cases spanning auth, isolation, f
 
 #### Automated
 
-- [x] 1.1 All event upload tests pass: `uv run pytest tests/test_events.py -v`
-- [x] 1.2 Existing tests still pass: `uv run pytest tests/ -v`
-- [x] 1.3 Application starts without import errors: `uv run uvicorn main:app --reload`
+- [x] 1.1 All event upload tests pass: `uv run pytest tests/test_events.py -v` — ad486a0
+- [x] 1.2 Existing tests still pass: `uv run pytest tests/ -v` — ad486a0
+- [x] 1.3 Application starts without import errors: `uv run uvicorn main:app --reload` — ad486a0
 
 #### Manual
 
-- [x] 1.4 Upload a valid CSV via curl/Postman; response is `{"events_added": N}`
-- [x] 1.5 Upload a file with a missing field; response contains readable error with row number
-- [x] 1.6 Upload > 200,000 records; response mentions the limit
+- [x] 1.4 Upload a valid CSV via curl/Postman; response is `{"events_added": N}` — ad486a0
+- [x] 1.5 Upload a file with a missing field; response contains readable error with row number — ad486a0
+- [x] 1.6 Upload > 200,000 records; response mentions the limit — ad486a0
 
 ### Phase 2: Frontend upload UI
 
 #### Automated
 
-- [ ] 2.1 Frontend builds without type errors: `cd frontend && npm run build`
-- [ ] 2.2 Lint passes: `cd frontend && npm run lint`
+- [x] 2.1 Frontend builds without type errors: `cd frontend && npm run build`
+- [x] 2.2 Lint passes: `cd frontend && npm run lint`
 
 #### Manual
 
-- [ ] 2.3 Upload valid CSV on ReportDetail; see success message and updated event count
-- [ ] 2.4 Upload valid JSON; same success flow
-- [ ] 2.5 Select CSV > 200k lines; client-side rejection before network call
-- [ ] 2.6 Upload CSV with missing field; backend error displayed in red
-- [ ] 2.7 "Run Analysis" button disabled before upload, enabled after
-- [ ] 2.8 Delete modal still works after upload UI changes
+- [x] 2.3 Upload valid CSV on ReportDetail; see success message and updated event count
+- [x] 2.4 Upload valid JSON; same success flow
+- [x] 2.5 Select CSV > 200k lines; client-side rejection before network call
+- [x] 2.6 Upload CSV with missing field; backend error displayed in red
+- [x] 2.7 "Run Analysis" button disabled before upload, enabled after
+- [x] 2.8 Delete modal still works after upload UI changes

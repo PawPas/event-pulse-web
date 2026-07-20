@@ -8,3 +8,7 @@ export interface Report {
   created_at: string
   updated_at: string
 }
+
+export interface UploadResult {
+  events_added: number
+}
