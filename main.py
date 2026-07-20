@@ -5,6 +5,7 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from auth.dependencies import get_current_user
 from auth.schemas import TokenPayload
 from database import _get_engine, close_engine, engine_health_check
+from routers.auth import router as auth_router
 
 
 @asynccontextmanager
@@ -15,6 +16,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.include_router(auth_router)
 
 
 @app.get("/health")
