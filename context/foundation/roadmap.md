@@ -32,7 +32,7 @@ Small and medium e-commerce and SaaS product managers have customer event data i
 | F-01 | auth-scaffold          | (foundation) auth middleware wired; protected routes return 401 | —             | FR-001, FR-002, Access Control | ready    |
 | F-02 | db-schema-baseline     | (foundation) ORM + Alembic migrations for User, Report, Event tables applied | — | Business Logic §Event schema, Access Control | ready |
 | S-01 | auth-flows             | register with email/password, log in, and log out              | F-01, F-02    | FR-001, FR-002, FR-003         | done     |
-| S-02 | report-management      | create a report, view the list, open it, and delete it         | S-01          | FR-004, FR-005, FR-006, FR-007 | proposed |
+| S-02 | report-management      | create a report, view the list, open it, and delete it         | S-01          | FR-004, FR-005, FR-006, FR-007 | done     |
 | S-03 | event-file-upload      | add customer events to a report by uploading CSV or JSON       | S-02          | FR-008                         | proposed |
 | S-04 | sample-generator       | add sample customer events to a report in one click            | S-02          | FR-009                         | proposed |
 | S-05 | rfm-analysis-dashboard | run RFM analysis and view a sortable results dashboard         | S-03          | FR-010, FR-011, FR-012, US-01  | proposed |
@@ -110,7 +110,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** four FRs in one slice; all are CRUD operations on the same Report entity — splitting would produce artificially thin slices with no independent user-visible value; FR-006's two-state report page (pre-analysis and post-analysis) must be designed in this slice even though the post-analysis state is exercised in S-05
-- **Status:** proposed
+- **Status:** done
 
 ### S-03: User can add events via file upload
 
@@ -185,3 +185,4 @@ Items from PRD §Non-Goals — deferred from MVP scope.
 ## Done
 
 - **S-01: register with email/password, log in, and log out** — Archived 2026-07-20 → `context/archive/2026-07-20-auth-flows/`. Lesson: —.
+- **S-02: user can create a named report with an optional description, view their list of reports, open a report to see its detail in the pre-analysis state, and delete a report with a mandatory confirmation step.** — Archived 2026-07-20 → `context/archive/2026-07-20-report-management/`. Lesson: —.

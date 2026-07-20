@@ -1,10 +1,10 @@
 ---
 change_id: report-management
 title: Report management
-status: implemented
+status: archived
 created: 2026-07-20
 updated: 2026-07-20
-archived_at: null
+archived_at: 2026-07-20T20:47:07Z
 ---
 
 ## Notes
