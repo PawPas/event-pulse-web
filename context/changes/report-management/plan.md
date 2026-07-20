@@ -351,17 +351,17 @@ No Alembic migration needed. The `reports` and `events` tables were created by t
 
 #### Automated
 
-- [x] 2.1 Build passes: `cd frontend && npm run build`
-- [x] 2.2 Lint passes: `cd frontend && npm run lint`
+- [x] 2.1 Build passes: `cd frontend && npm run build` — b946029
+- [x] 2.2 Lint passes: `cd frontend && npm run lint` — b946029
 
 #### Manual
 
-- [x] 2.3 Unauthenticated `/` redirects to `/login`
-- [x] 2.4 Empty list → "No reports yet…" empty state shown
-- [x] 2.5 Inline create form → report appears in list
-- [x] 2.6 Click report → detail page with disabled "Run Analysis" button
-- [x] 2.7 Delete modal on detail page → confirm → navigates to `/`, report gone
-- [x] 2.8 Delete modal on list → cancel keeps report, confirm removes it
-- [x] 2.9 Unknown report URL → "Report not found." with back link
-- [x] 2.10 `uv run pytest tests/ -v` — all 19 pass (regression)
-- [x] 2.11 AppShell "EventPulse" link navigates to `/`
+- [x] 2.3 Unauthenticated `/` redirects to `/login` — b946029
+- [x] 2.4 Empty list → "No reports yet…" empty state shown — b946029
+- [x] 2.5 Inline create form → report appears in list — b946029
+- [x] 2.6 Click report → detail page with disabled "Run Analysis" button — b946029
+- [x] 2.7 Delete modal on detail page → confirm → navigates to `/`, report gone — b946029
+- [x] 2.8 Delete modal on list → cancel keeps report, confirm removes it — b946029
+- [x] 2.9 Unknown report URL → "Report not found." with back link — b946029
+- [x] 2.10 `uv run pytest tests/ -v` — all 19 pass (regression) — b946029
+- [x] 2.11 AppShell "EventPulse" link navigates to `/` — b946029
