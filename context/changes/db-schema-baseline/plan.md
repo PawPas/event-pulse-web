@@ -406,23 +406,23 @@ This ensures migrations run before the server starts on every deploy.
 
 #### Automated
 
-- [x] 2.1 Model import check: `uv run python -c "from models import User, Report, ReportStatus, Event; print('ok')"`
+- [x] 2.1 Model import check: `uv run python -c "from models import User, Report, ReportStatus, Event; print('ok')"` — 0446490
 
 #### Manual
 
-- [x] 2.2 Review User model: id (UUID), email (unique), hashed_password, created_at, updated_at, reports relationship
-- [x] 2.3 Review Report model: id, user_id FK, name, description, status (ReportStatus enum), analyzed_at, timestamps, relationships
-- [x] 2.4 Review Event model: id, report_id FK, customer_id, timestamp, event_type, amount (Numeric 15,4), two indexes
+- [x] 2.2 Review User model: id (UUID), email (unique), hashed_password, created_at, updated_at, reports relationship — 0446490
+- [x] 2.3 Review Report model: id, user_id FK, name, description, status (ReportStatus enum), analyzed_at, timestamps, relationships — 0446490
+- [x] 2.4 Review Event model: id, report_id FK, customer_id, timestamp, event_type, amount (Numeric 15,4), two indexes — 0446490
 
 ### Phase 3: Alembic setup + initial migration + smoke test
 
 #### Automated
 
-- [ ] 3.1 All tests pass: `uv run pytest tests/ -v` (test_auth.py + test_db_health.py)
-- [ ] 3.2 Alembic current: `DATABASE_URL=<url> uv run alembic current` shows initial_schema as (head)
+- [x] 3.1 All tests pass: `uv run pytest tests/ -v` (test_auth.py + test_db_health.py)
+- [x] 3.2 Alembic current: `DATABASE_URL=<url> uv run alembic current` shows initial_schema as (head)
 
 #### Manual
 
-- [ ] 3.3 Round-trip: `alembic downgrade base` then `alembic upgrade head` both succeed
-- [ ] 3.4 Tables visible in Postgres: `users`, `reports`, `events` with expected columns
-- [ ] 3.5 Health endpoint on Railway: `curl https://<api-url>/api/health/db` → `{"db":"ok"}`
+- [x] 3.3 Round-trip: `alembic downgrade base` then `alembic upgrade head` both succeed
+- [x] 3.4 Tables visible in Postgres: `users`, `reports`, `events` with expected columns
+- [x] 3.5 Health endpoint on Railway: `curl https://<api-url>/api/health/db` → `{"db":"ok"}`
