@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { safeJsonParse } from "../utils/safeJsonParse";
 
 interface AuthUser {
   id: string;
@@ -11,9 +12,13 @@ interface AuthState {
   user: AuthUser | null;
 }
 
+// Sync-only init: localStorage reads are synchronous so ProtectedRoute never
+// sees a transient null token on first render. If async rehydration (token
+// refresh, remote session check) is ever added, introduce isInitialising: true
+// here and guard ProtectedRoute with a spinner until it flips to false.
 const initialState: AuthState = {
   token: localStorage.getItem("token"),
-  user: JSON.parse(localStorage.getItem("user") ?? "null"),
+  user: safeJsonParse<AuthUser | null>(localStorage.getItem("user"), null),
 };
 
 const authSlice = createSlice({

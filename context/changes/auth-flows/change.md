@@ -1,7 +1,7 @@
 ---
 change_id: auth-flows
 title: Auth flows
-status: implementing
+status: impl_reviewed
 created: 2026-07-20
 updated: 2026-07-20
 archived_at: null

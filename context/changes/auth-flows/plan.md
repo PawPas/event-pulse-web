@@ -387,28 +387,28 @@ Railway pre-start command update (manual gate): the `alembic upgrade head && uvi
 
 #### Automated
 
-- [x] 2.1 Build passes: `cd frontend && npm run build`
-- [x] 2.2 Lint passes: `cd frontend && npm run lint`
+- [x] 2.1 Build passes: `cd frontend && npm run build` — 33e19bf
+- [x] 2.2 Lint passes: `cd frontend && npm run lint` — 33e19bf
 
 #### Manual
 
-- [ ] 2.3 Redux DevTools shows `auth` slice after app loads
-- [ ] 2.4 Page refresh with token in localStorage restores `auth.token` + `auth.user` in DevTools
+- [x] 2.3 Redux DevTools shows `auth` slice after app loads
+- [x] 2.4 Page refresh with token in localStorage restores `auth.token` + `auth.user` in DevTools
 
 ### Phase 3: Frontend pages + routing + shell
 
 #### Automated
 
-- [ ] 3.1 Build passes: `cd frontend && npm run build`
-- [ ] 3.2 Lint passes: `cd frontend && npm run lint`
+- [x] 3.1 Build passes: `cd frontend && npm run build`
+- [x] 3.2 Lint passes: `cd frontend && npm run lint`
 
 #### Manual
 
-- [ ] 3.3 Unauthenticated `/` redirects to `/login`
-- [ ] 3.4 Register → lands on `/` with `Welcome, {email}` in AppShell
-- [ ] 3.5 Page refresh → session persists, no re-login
-- [ ] 3.6 Logout → clears token, redirects to `/login`
-- [ ] 3.7 Login with valid credentials → lands on `/`
-- [ ] 3.8 Duplicate email on `/register` → inline error shown
-- [ ] 3.9 Wrong password on `/login` → inline error shown
-- [ ] 3.10 `uv run pytest tests/ -v` — all 10 tests pass
+- [x] 3.3 Unauthenticated `/` redirects to `/login`
+- [x] 3.4 Register → lands on `/` with `Welcome, {email}` in AppShell
+- [x] 3.5 Page refresh → session persists, no re-login
+- [x] 3.6 Logout → clears token, redirects to `/login`
+- [x] 3.7 Login with valid credentials → lands on `/`
+- [x] 3.8 Duplicate email on `/register` → inline error shown
+- [x] 3.9 Wrong password on `/login` → inline error shown
+- [x] 3.10 `uv run pytest tests/ -v` — all 10 tests pass
