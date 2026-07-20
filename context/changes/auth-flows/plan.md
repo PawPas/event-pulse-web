@@ -372,23 +372,23 @@ Railway pre-start command update (manual gate): the `alembic upgrade head && uvi
 
 #### Automated
 
-- [x] 1.1 New tests pass: `uv run pytest tests/test_auth_flows.py -v` (5/5)
-- [x] 1.2 Full suite passes: `uv run pytest tests/ -v` (10/10)
-- [x] 1.3 Router import check: `uv run python -c "from routers.auth import router; print('ok')"`
+- [x] 1.1 New tests pass: `uv run pytest tests/test_auth_flows.py -v` (5/5) — 4c16ac4
+- [x] 1.2 Full suite passes: `uv run pytest tests/ -v` (10/10) — 4c16ac4
+- [x] 1.3 Router import check: `uv run python -c "from routers.auth import router; print('ok')"` — 4c16ac4
 
 #### Manual
 
-- [x] 1.4 `curl POST /api/auth/register` with new email → 201 with `access_token`
-- [x] 1.5 `curl POST /api/auth/login` with same credentials → 200 with `access_token`
-- [x] 1.6 Duplicate register → 409; wrong password → 401
-- [x] 1.7 Existing `uv run pytest tests/test_auth.py -v` still passes (regression)
+- [x] 1.4 `curl POST /api/auth/register` with new email → 201 with `access_token` — 4c16ac4
+- [x] 1.5 `curl POST /api/auth/login` with same credentials → 200 with `access_token` — 4c16ac4
+- [x] 1.6 Duplicate register → 409; wrong password → 401 — 4c16ac4
+- [x] 1.7 Existing `uv run pytest tests/test_auth.py -v` still passes (regression) — 4c16ac4
 
 ### Phase 2: Frontend Redux store + API client
 
 #### Automated
 
-- [ ] 2.1 Build passes: `cd frontend && npm run build`
-- [ ] 2.2 Lint passes: `cd frontend && npm run lint`
+- [x] 2.1 Build passes: `cd frontend && npm run build`
+- [x] 2.2 Lint passes: `cd frontend && npm run lint`
 
 #### Manual
 
