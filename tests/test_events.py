@@ -3,8 +3,6 @@ import json
 
 import pytest
 
-_state: dict[str, str] = {}
-
 VALID_ROW = {
     "customer_id": "c1",
     "timestamp": "2024-03-15T10:30:00Z",
@@ -53,9 +51,7 @@ def report_id(test_client, auth_token):
         headers={"Authorization": f"Bearer {auth_token}"},
     )
     assert resp.status_code == 201
-    rid = resp.json()["id"]
-    _state["report_id"] = rid
-    return rid
+    return resp.json()["id"]
 
 
 def _upload(test_client, auth_token, report_id, filename, content_bytes, content_type="text/csv"):

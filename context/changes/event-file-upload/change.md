@@ -1,9 +1,9 @@
 ---
 change_id: event-file-upload
 title: Event file upload
-status: implemented
+status: impl_reviewed
 created: 2026-07-20
-updated: 2026-07-20
+updated: 2026-07-21
 archived_at: null
 ---
 

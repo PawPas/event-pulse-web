@@ -28,7 +28,6 @@ class UploadResult(BaseModel):
 
 
 def _parse_record(row: object, row_num: int) -> tuple[Event | None, str | None]:
-    """Validate one record dict and return an Event or an error message."""
     if not isinstance(row, dict):
         return None, f"Row {row_num}: expected an object, got {type(row).__name__}"
 
@@ -60,7 +59,6 @@ def _parse_record(row: object, row_num: int) -> tuple[Event | None, str | None]:
 
 
 def _parse_csv(content: str) -> tuple[list[dict], str | None]:
-    """Parse CSV string; return (rows, error_message). error_message is set on structural errors."""
     reader = csv.DictReader(io.StringIO(content))
     required = {"customer_id", "timestamp", "event_type", "amount"}
     fieldnames = set(reader.fieldnames or [])
@@ -71,7 +69,6 @@ def _parse_csv(content: str) -> tuple[list[dict], str | None]:
 
 
 def _parse_json(content: str) -> tuple[list, str | None]:
-    """Parse JSON string; return (items, error_message)."""
     try:
         data = json.loads(content)
     except json.JSONDecodeError as exc:
@@ -156,7 +153,8 @@ async def upload_events(
             if len(sample_errors) < _MAX_SAMPLE_ERRORS:
                 sample_errors.append(error)
         else:
-            assert event is not None
+            if event is None:
+                continue
             event.report_id = report_id
             events.append(event)
 
