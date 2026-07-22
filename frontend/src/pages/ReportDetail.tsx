@@ -179,10 +179,13 @@ export default function ReportDetail() {
               <input
                 type="number"
                 min={1}
+                max={250_000}
                 value={sampleCount}
                 onChange={(e) => {
-                  setSampleCount(Number(e.target.value))
+                  const parsed = Number(e.target.value)
+                  if (!Number.isNaN(parsed) && parsed >= 1) setSampleCount(parsed)
                   setSampleStatus('idle')
+                  setSampleError(null)
                 }}
                 style={{ marginLeft: 8, width: 100 }}
               />

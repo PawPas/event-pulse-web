@@ -1,7 +1,7 @@
 ---
 change_id: sample-generator
 title: Sample generator
-status: implemented
+status: impl_reviewed
 created: 2026-07-21
 updated: 2026-07-22
 archived_at: null

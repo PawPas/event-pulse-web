@@ -335,6 +335,9 @@ async def generate_sample_events(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Report not found")
 
     # 2. Cap check: existing + requested must not exceed 200k
+    # Note: COUNT and INSERT are separate round-trips (TOCTOU gap shared with upload_events).
+    # Concurrent requests can both pass this check and together exceed the limit.
+    # Acceptable at current scale; harden with SELECT ... FOR UPDATE if concurrent use grows.
     count_result = await db.execute(
         select(func.count(Event.id)).where(Event.report_id == report_id)
     )
@@ -372,4 +375,4 @@ async def generate_sample_events(
     db.add_all(events)
     await db.commit()
 
-    return UploadResult(events_added=resolved.count)
+    return UploadResult(events_added=len(events))
