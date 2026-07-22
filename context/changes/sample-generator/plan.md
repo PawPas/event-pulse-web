@@ -258,13 +258,13 @@ sampleEventsAdded: number | null  (useState(null))
 
 #### Automated
 
-- [x] 2.1 `cd frontend && npm run lint` — zero lint errors
+- [x] 2.1 `cd frontend && npm run lint` — zero lint errors — de207dd
 
 #### Manual
 
-- [x] 2.2 "Generate Sample" button and count input appear on a `created`-status report
-- [x] 2.3 Default count shows 150; changing it resets prior feedback
-- [x] 2.4 Default count click shows green success message and refreshed event count
-- [x] 2.5 Count set to 200001 shows red 400 error
-- [x] 2.6 Count set to 5 generates exactly 5 events
-- [x] 2.7 Button shows "Generating…" and is disabled during in-flight request
+- [x] 2.2 "Generate Sample" button and count input appear on a `created`-status report — de207dd
+- [x] 2.3 Default count shows 150; changing it resets prior feedback — de207dd
+- [x] 2.4 Default count click shows green success message and refreshed event count — de207dd
+- [x] 2.5 Count set to 200001 shows red 400 error — de207dd
+- [x] 2.6 Count set to 5 generates exactly 5 events — de207dd
+- [x] 2.7 Button shows "Generating…" and is disabled during in-flight request — de207dd
