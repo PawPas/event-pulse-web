@@ -244,27 +244,27 @@ sampleEventsAdded: number | null  (useState(null))
 
 #### Automated
 
-- [x] 1.1 `uv run pytest tests/test_sample_generator.py -v` — all 7 tests pass
-- [x] 1.2 `uv run pytest tests/ -v` — no regressions in existing test suite
+- [x] 1.1 `uv run pytest tests/test_sample_generator.py -v` — all 7 tests pass — 27a30cb
+- [x] 1.2 `uv run pytest tests/ -v` — no regressions in existing test suite — 27a30cb
 
 #### Manual
 
-- [x] 1.3 POST with no body → 200, `events_added: 150`
-- [x] 1.4 POST with `{"count": 200001}` → 400, detail contains "200,000"
-- [x] 1.5 Report `event_count` increases by `events_added` after the call
-- [x] 1.6 Event distribution per customer matches intended segment profile (Champion/Loyal/Potential Loyalist/At Risk/Hibernating/Others candidates all present)
+- [x] 1.3 POST with no body → 200, `events_added: 150` — 27a30cb
+- [x] 1.4 POST with `{"count": 200001}` → 400, detail contains "200,000" — 27a30cb
+- [x] 1.5 Report `event_count` increases by `events_added` after the call — 27a30cb
+- [x] 1.6 Event distribution per customer matches intended segment profile (Champion/Loyal/Potential Loyalist/At Risk/Hibernating/Others candidates all present) — 27a30cb
 
 ### Phase 2: Frontend button
 
 #### Automated
 
-- [ ] 2.1 `cd frontend && npm run lint` — zero lint errors
+- [x] 2.1 `cd frontend && npm run lint` — zero lint errors
 
 #### Manual
 
-- [ ] 2.2 "Generate Sample" button and count input appear on a `created`-status report
-- [ ] 2.3 Default count shows 150; changing it resets prior feedback
-- [ ] 2.4 Default count click shows green success message and refreshed event count
-- [ ] 2.5 Count set to 200001 shows red 400 error
-- [ ] 2.6 Count set to 5 generates exactly 5 events
-- [ ] 2.7 Button shows "Generating…" and is disabled during in-flight request
+- [x] 2.2 "Generate Sample" button and count input appear on a `created`-status report
+- [x] 2.3 Default count shows 150; changing it resets prior feedback
+- [x] 2.4 Default count click shows green success message and refreshed event count
+- [x] 2.5 Count set to 200001 shows red 400 error
+- [x] 2.6 Count set to 5 generates exactly 5 events
+- [x] 2.7 Button shows "Generating…" and is disabled during in-flight request

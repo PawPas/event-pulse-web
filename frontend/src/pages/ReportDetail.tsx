@@ -16,6 +16,10 @@ export default function ReportDetail() {
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle')
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [uploadEventsAdded, setUploadEventsAdded] = useState<number | null>(null)
+  const [sampleCount, setSampleCount] = useState(150)
+  const [sampleStatus, setSampleStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [sampleError, setSampleError] = useState<string | null>(null)
+  const [sampleEventsAdded, setSampleEventsAdded] = useState<number | null>(null)
 
   useEffect(() => {
     if (!id) return
@@ -68,6 +72,30 @@ export default function ReportDetail() {
         setUploadError(err.detail)
       } else {
         setUploadError('Upload failed. Please try again.')
+      }
+    }
+  }
+
+  async function handleGenerateSample() {
+    if (!id) return
+    setSampleStatus('loading')
+    setSampleError(null)
+    setSampleEventsAdded(null)
+    try {
+      const result = (await apiFetch(`/api/reports/${id}/events/sample`, {
+        method: 'POST',
+        body: JSON.stringify({ count: sampleCount }),
+      })) as UploadResult
+      setSampleStatus('success')
+      setSampleEventsAdded(result.events_added)
+      const updated = (await apiFetch(`/api/reports/${id}`)) as Report
+      setReport(updated)
+    } catch (err: unknown) {
+      setSampleStatus('error')
+      if (err instanceof ApiError) {
+        setSampleError(err.detail)
+      } else {
+        setSampleError('Sample generation failed. Please try again.')
       }
     }
   }
@@ -144,6 +172,36 @@ export default function ReportDetail() {
           )}
           {uploadStatus === 'error' && uploadError && (
             <p style={{ color: 'red', marginTop: 8 }}>{uploadError}</p>
+          )}
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 16 }}>
+            <label>
+              Sample count:
+              <input
+                type="number"
+                min={1}
+                value={sampleCount}
+                onChange={(e) => {
+                  setSampleCount(Number(e.target.value))
+                  setSampleStatus('idle')
+                }}
+                style={{ marginLeft: 8, width: 100 }}
+              />
+            </label>
+            <button
+              type="button"
+              onClick={handleGenerateSample}
+              disabled={sampleStatus === 'loading'}
+            >
+              {sampleStatus === 'loading' ? 'Generating…' : 'Generate Sample'}
+            </button>
+          </div>
+          {sampleStatus === 'success' && sampleEventsAdded !== null && (
+            <p style={{ color: 'green', marginTop: 8 }}>
+              Successfully generated {sampleEventsAdded.toLocaleString()} sample events.
+            </p>
+          )}
+          {sampleStatus === 'error' && sampleError && (
+            <p style={{ color: 'red', marginTop: 8 }}>{sampleError}</p>
           )}
           <button
             type="button"
