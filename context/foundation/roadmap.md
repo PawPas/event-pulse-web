@@ -3,7 +3,7 @@ project: "EventPulse Web"
 version: 1
 status: draft
 created: 2026-07-17
-updated: 2026-07-21
+updated: 2026-07-22
 prd_version: 1
 main_goal: market-feedback
 top_blocker: capacity
@@ -34,7 +34,7 @@ Small and medium e-commerce and SaaS product managers have customer event data i
 | S-01 | auth-flows             | register with email/password, log in, and log out              | F-01, F-02    | FR-001, FR-002, FR-003         | done     |
 | S-02 | report-management      | create a report, view the list, open it, and delete it         | S-01          | FR-004, FR-005, FR-006, FR-007 | done     |
 | S-03 | event-file-upload      | add customer events to a report by uploading CSV or JSON       | S-02          | FR-008                         | done     |
-| S-04 | sample-generator       | add sample customer events to a report in one click            | S-02          | FR-009                         | proposed |
+| S-04 | sample-generator       | add sample customer events to a report in one click            | S-02          | FR-009                         | done     |
 | S-05 | rfm-analysis-dashboard | run RFM analysis and view a sortable results dashboard         | S-03          | FR-010, FR-011, FR-012, US-01  | proposed |
 
 ## Streams
@@ -136,7 +136,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Sample size and distribution: how many customers, events, and what purchase rate should the generator produce? Owner: team. Block: no (sensible defaults suffice for MVP; can be tuned after seeing the dashboard results).
 - **Risk:** the generated sample must produce representatives from all six segment types when analysed, or the zero-friction demo path loses its value; verify segment coverage as an acceptance criterion for this slice
-- **Status:** proposed
+- **Status:** done
 
 ### S-05: User can run RFM analysis and view the results dashboard
 
@@ -187,3 +187,4 @@ Items from PRD §Non-Goals — deferred from MVP scope.
 - **S-01: register with email/password, log in, and log out** — Archived 2026-07-20 → `context/archive/2026-07-20-auth-flows/`. Lesson: —.
 - **S-02: user can create a named report with an optional description, view their list of reports, open a report to see its detail in the pre-analysis state, and delete a report with a mandatory confirmation step.** — Archived 2026-07-20 → `context/archive/2026-07-20-report-management/`. Lesson: —.
 - **S-03: add customer events to a report by uploading CSV or JSON** — Archived 2026-07-21 → `context/archive/2026-07-20-event-file-upload/`. Lesson: —.
+- **S-04: add sample customer events to a report in one click** — Archived 2026-07-22 → `context/archive/2026-07-21-sample-generator/`. Lesson: —.

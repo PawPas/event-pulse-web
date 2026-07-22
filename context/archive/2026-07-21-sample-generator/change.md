@@ -1,10 +1,10 @@
 ---
 change_id: sample-generator
 title: Sample generator
-status: impl_reviewed
+status: archived
 created: 2026-07-21
 updated: 2026-07-22
-archived_at: null
+archived_at: 2026-07-22T21:30:12Z
 ---
 
 ## Notes
