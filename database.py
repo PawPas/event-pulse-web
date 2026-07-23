@@ -29,6 +29,12 @@ def _get_engine() -> AsyncEngine:
     return _engine_instance
 
 
+def get_session_factory() -> async_sessionmaker[AsyncSession]:
+    _get_engine()
+    assert _session_factory_instance is not None
+    return _session_factory_instance
+
+
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     _get_engine()
     assert _session_factory_instance is not None
