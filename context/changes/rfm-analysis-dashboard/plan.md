@@ -469,26 +469,26 @@ sortDir: 'asc' | 'desc'                            useState('asc')
 
 #### Automated
 
-- [x] 1.1 `uv run alembic upgrade head` — migration applies cleanly
-- [x] 1.2 `uv run pytest tests/test_rfm_algorithm.py -v` — all algorithm unit tests pass
-- [x] 1.3 `uv run pytest tests/ -v` — no regressions in existing suite
+- [x] 1.1 `uv run alembic upgrade head` — migration applies cleanly — 559dccf
+- [x] 1.2 `uv run pytest tests/test_rfm_algorithm.py -v` — all algorithm unit tests pass — 559dccf
+- [x] 1.3 `uv run pytest tests/ -v` — no regressions in existing suite — 559dccf
 
 #### Manual
 
-- [x] 1.4 pgAdmin: `analysis_result` column exists on `reports` table, type jsonb, nullable
+- [x] 1.4 pgAdmin: `analysis_result` column exists on `reports` table, type jsonb, nullable — 559dccf
 
 ### Phase 2: Analysis API endpoints
 
 #### Automated
 
-- [ ] 2.1 `uv run pytest tests/test_analysis.py -v` — all 9 integration tests pass
-- [ ] 2.2 `uv run pytest tests/ -v` — no regressions
+- [x] 2.1 `uv run pytest tests/test_analysis.py -v` — all 9 integration tests pass
+- [x] 2.2 `uv run pytest tests/ -v` — no regressions
 
 #### Manual
 
-- [ ] 2.3 `POST /api/reports/{id}/analysis/run` → 202, `{"status": "analyzing"}`
-- [ ] 2.4 Polling `GET /api/reports/{id}` → status transitions to `completed` within 30 seconds
-- [ ] 2.5 `GET /api/reports/{id}/analysis/results` → valid JSON with `unique_customers`, `segment_counts`, `customers`
+- [x] 2.3 `POST /api/reports/{id}/analysis/run` → 202, `{"status": "analyzing"}`
+- [x] 2.4 Polling `GET /api/reports/{id}` → status transitions to `completed` within 30 seconds
+- [x] 2.5 `GET /api/reports/{id}/analysis/results` → valid JSON with `unique_customers`, `segment_counts`, `customers`
 
 ### Phase 3: Frontend dashboard
 

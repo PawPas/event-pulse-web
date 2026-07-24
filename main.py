@@ -5,6 +5,7 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from auth.dependencies import get_current_user
 from auth.schemas import TokenPayload
 from database import _get_engine, close_engine, engine_health_check
+from routers.analysis import router as analysis_router
 from routers.auth import router as auth_router
 from routers.events import router as events_router
 from routers.reports import router as reports_router
@@ -21,6 +22,7 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(auth_router)
 app.include_router(events_router)
 app.include_router(reports_router)
+app.include_router(analysis_router)
 
 
 @app.get("/health")
