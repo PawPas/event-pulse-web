@@ -164,15 +164,16 @@ def test_run_already_analyzing(test_client, auth_token, report_id):
     # background task — using the test engine via get_session_factory().
     _set_report_status(report_id, ReportStatus.analyzing)
 
-    resp = test_client.post(
-        f"/api/reports/{report_id}/analysis/run",
-        headers=_headers(auth_token),
-    )
-    assert resp.status_code == 409
-    assert "in progress" in resp.json()["detail"].lower()
-
-    # Restore to created so subsequent tests can trigger analysis
-    _set_report_status(report_id, ReportStatus.created)
+    try:
+        resp = test_client.post(
+            f"/api/reports/{report_id}/analysis/run",
+            headers=_headers(auth_token),
+        )
+        assert resp.status_code == 409
+        assert "in progress" in resp.json()["detail"].lower()
+    finally:
+        # Restore to created so subsequent tests can trigger analysis
+        _set_report_status(report_id, ReportStatus.created)
 
 
 # ---------------------------------------------------------------------------
@@ -204,7 +205,7 @@ def test_results_shape(test_client, auth_token, report_id):
 
     assert data["unique_customers"] > 0
     assert len(data["customers"]) == data["unique_customers"]
-    assert set(data["segment_counts"].keys()) == _KNOWN_SEGMENTS
+    assert set(data["segment_counts"].keys()) == _KNOWN_SEGMENTS  # PRD §RFM-algorithm: segment list is a fixed 6-element closed set
     assert sum(data["segment_counts"].values()) == data["unique_customers"]
 
 

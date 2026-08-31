@@ -34,6 +34,8 @@ def test_client():
     # Pre-inject the test engine so both the app lifespan and background tasks
     # (which call get_session_factory() directly, bypassing Depends) use the
     # same StaticPool SQLite connection as request-scoped sessions.
+    # See context/foundation/lessons.md: "Pre-inject test engine when background
+    # tasks bypass FastAPI DI" for why this is required.
     _db_module._engine_instance = engine
     _db_module._session_factory_instance = session_factory
 

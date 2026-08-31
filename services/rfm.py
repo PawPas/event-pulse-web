@@ -1,9 +1,10 @@
+from collections.abc import Callable
 from datetime import datetime
+from decimal import Decimal
 from statistics import quantiles
-from typing import Any
 
 
-_SEGMENT_RULES: list[tuple[str, Any]] = [
+_SEGMENT_RULES: list[tuple[str, Callable[[int, int, int], bool]]] = [
     ("Champions",           lambda r, f, m: r >= 4 and f >= 4),
     ("Loyal Customers",     lambda r, f, m: f >= 4 and m >= 4),
     ("Potential Loyalists", lambda r, f, m: r >= 4 and f < 4),
@@ -51,14 +52,14 @@ def compute_rfm(events: list[dict], analysis_ts: datetime) -> dict:
         etype: str = event["event_type"]
 
         if cid not in agg:
-            agg[cid] = {"latest_date": ts.date(), "frequency": 0, "monetary": 0.0}
+            agg[cid] = {"latest_date": ts.date(), "frequency": 0, "monetary": Decimal(0)}
 
         if ts.date() > agg[cid]["latest_date"]:
             agg[cid]["latest_date"] = ts.date()
 
         agg[cid]["frequency"] += 1
         if etype == "purchase":
-            agg[cid]["monetary"] += float(amount)
+            agg[cid]["monetary"] += amount
 
     customer_ids = list(agg.keys())
     n = len(customer_ids)
@@ -79,7 +80,7 @@ def compute_rfm(events: list[dict], analysis_ts: datetime) -> dict:
                 "m_score": 3,
                 "recency_days": recency_days,
                 "frequency": data["frequency"],
-                "monetary": data["monetary"],
+                "monetary": float(data["monetary"]),
             }],
         }
 
@@ -117,7 +118,7 @@ def compute_rfm(events: list[dict], analysis_ts: datetime) -> dict:
             "m_score": m_score,
             "recency_days": recency_days,
             "frequency": data["frequency"],
-            "monetary": data["monetary"],
+            "monetary": float(data["monetary"]),
         })
 
     return {

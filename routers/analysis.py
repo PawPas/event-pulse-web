@@ -1,8 +1,9 @@
+import logging
 from datetime import datetime, timezone
 from uuid import UUID
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,7 +14,7 @@ from models.event import Event
 from models.report import Report, ReportStatus
 from services.rfm import compute_rfm
 
-router = APIRouter(prefix="/api/reports", tags=["analysis"])
+router = APIRouter(prefix="/api/reports", tags=["reports"])
 
 
 class CustomerResult(BaseModel):
@@ -71,6 +72,7 @@ async def _run_analysis(report_id: UUID) -> None:
             await db.commit()
 
         except Exception:
+            logging.exception("_run_analysis failed for report %s", report_id)
             try:
                 await db.rollback()
                 result = await db.execute(select(Report).where(Report.id == report_id))
@@ -79,7 +81,7 @@ async def _run_analysis(report_id: UUID) -> None:
                     report.status = ReportStatus.failed
                     await db.commit()
             except Exception:
-                pass
+                logging.exception("Failed to set report %s to failed", report_id)
 
 
 @router.post(
@@ -153,4 +155,10 @@ async def get_analysis_results(
             detail="No analysis results — run analysis first",
         )
 
-    return AnalysisResult(**report.analysis_result)
+    try:
+        return AnalysisResult(**report.analysis_result)
+    except ValidationError:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Stored analysis result is corrupted",
+        )
