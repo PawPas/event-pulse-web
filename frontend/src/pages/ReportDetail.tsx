@@ -1,7 +1,31 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { apiFetch, apiFetchFile, ApiError } from '../api/client'
-import type { Report, UploadResult } from '../types/report'
+import type { Report, UploadResult, AnalysisResult, CustomerResult } from '../types/report'
+
+const SEGMENT_ORDER: Record<string, number> = {
+  'Champions': 1,
+  'Loyal Customers': 2,
+  'Potential Loyalists': 3,
+  'At Risk': 4,
+  'Hibernating': 5,
+  'Others': 6,
+}
+
+const COLUMNS: Array<{ key: keyof CustomerResult; label: string }> = [
+  { key: 'customer_id', label: 'Customer ID' },
+  { key: 'segment', label: 'Segment' },
+  { key: 'r_score', label: 'R' },
+  { key: 'f_score', label: 'F' },
+  { key: 'm_score', label: 'M' },
+  { key: 'recency_days', label: 'Recency (days)' },
+  { key: 'frequency', label: 'Frequency' },
+  { key: 'monetary', label: 'Monetary ($)' },
+]
+
+// 2s interval × 60 attempts ≈ 2 minutes — well past the 30s the UI promises.
+const MAX_POLL_ATTEMPTS = 60
+const MAX_CONSECUTIVE_POLL_FAILURES = 3
 
 export default function ReportDetail() {
   const { id } = useParams<{ id: string }>()
@@ -20,20 +44,90 @@ export default function ReportDetail() {
   const [sampleStatus, setSampleStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [sampleError, setSampleError] = useState<string | null>(null)
   const [sampleEventsAdded, setSampleEventsAdded] = useState<number | null>(null)
+  const [analysisStatus, setAnalysisStatus] = useState<'idle' | 'triggering' | 'error'>('idle')
+  const [analysisError, setAnalysisError] = useState<string | null>(null)
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
+  const [resultsError, setResultsError] = useState<string | null>(null)
+  const [pollError, setPollError] = useState<string | null>(null)
+  const [pollGeneration, setPollGeneration] = useState(0)
+  const [sortKey, setSortKey] = useState<keyof CustomerResult>('segment')
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
 
   useEffect(() => {
     if (!id) return
+    let cancelled = false
+    // Reset per-report analysis state so a route-param change never shows
+    // the previous report's results (the results effect guards on !== null).
+    setAnalysisResult(null)
+    setResultsError(null)
+    setPollError(null)
     apiFetch(`/api/reports/${id}`)
-      .then((data) => setReport(data as Report))
+      .then((data) => {
+        if (!cancelled) setReport(data as Report)
+      })
       .catch((err: unknown) => {
+        if (cancelled) return
         if (err instanceof ApiError && err.status === 404) {
           setNotFound(true)
         } else {
           setError('Failed to load report')
         }
       })
-      .finally(() => setLoading(false))
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
   }, [id])
+
+  // Polling: while the report is analyzing, re-fetch every 2 seconds.
+  // Capped at MAX_POLL_ATTEMPTS; stops early after consecutive failures.
+  // pollGeneration lets the "Keep waiting" button restart an expired loop.
+  useEffect(() => {
+    if (report?.status !== 'analyzing') return
+    setPollError(null)
+    let cancelled = false
+    let attempts = 0
+    let consecutiveFailures = 0
+    const interval = setInterval(() => {
+      if (!id) return
+      attempts += 1
+      if (attempts > MAX_POLL_ATTEMPTS) {
+        clearInterval(interval)
+        setPollError('Analysis is taking longer than expected. It may still be running on the server.')
+        return
+      }
+      apiFetch(`/api/reports/${id}`)
+        .then((data) => {
+          if (cancelled) return
+          consecutiveFailures = 0
+          setReport(data as Report)
+        })
+        .catch((err: unknown) => {
+          if (cancelled) return
+          consecutiveFailures += 1
+          if (consecutiveFailures >= MAX_CONSECUTIVE_POLL_FAILURES) {
+            clearInterval(interval)
+            setPollError(err instanceof ApiError ? err.detail : 'Failed to check analysis status.')
+          }
+        })
+    }, 2000)
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+    }
+  }, [report?.status, id, pollGeneration])
+
+  // When status reaches 'completed' and we have no results yet, fetch them.
+  useEffect(() => {
+    if (report?.status !== 'completed' || analysisResult !== null || !id) return
+    loadResults()
+  // analyzed_at changes on every completed run, so a re-run re-fires this
+  // even when status stays 'completed' throughout. analysisResult intentionally
+  // omitted: adding it would refetch stale results mid-re-run.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [report?.status, report?.analyzed_at, id])
 
   async function handleUpload() {
     if (!uploadFile || !id) return
@@ -111,6 +205,68 @@ export default function ReportDetail() {
       setShowDeleteModal(false)
     }
   }
+
+  function loadResults() {
+    if (!id) return
+    setResultsError(null)
+    apiFetch(`/api/reports/${id}/analysis/results`)
+      .then((data) => setAnalysisResult(data as AnalysisResult))
+      .catch((err: unknown) => {
+        if (err instanceof ApiError) {
+          setResultsError(err.detail)
+        } else {
+          setResultsError('Failed to load analysis results.')
+        }
+      })
+  }
+
+  async function handleRunAnalysis() {
+    if (!id) return
+    setAnalysisStatus('triggering')
+    setAnalysisError(null)
+    try {
+      await apiFetch(`/api/reports/${id}/analysis/run`, { method: 'POST' })
+      setAnalysisStatus('idle')
+      const updated = (await apiFetch(`/api/reports/${id}`)) as Report
+      setReport(updated)
+    } catch (err: unknown) {
+      setAnalysisStatus('error')
+      if (err instanceof ApiError) {
+        setAnalysisError(err.detail)
+      } else {
+        setAnalysisError('Failed to start analysis. Please try again.')
+      }
+    }
+  }
+
+  function handleSort(key: keyof CustomerResult) {
+    if (sortKey === key) {
+      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
+    } else {
+      setSortKey(key)
+      setSortDir('asc')
+    }
+  }
+
+  const sortedCustomers: CustomerResult[] = useMemo(() => {
+    if (!analysisResult) return []
+    return [...analysisResult.customers].sort((a, b) => {
+      let cmp: number
+      if (sortKey === 'segment') {
+        cmp = (SEGMENT_ORDER[a.segment] ?? 99) - (SEGMENT_ORDER[b.segment] ?? 99)
+        if (cmp === 0) cmp = a.customer_id.localeCompare(b.customer_id)
+      } else {
+        const valA = a[sortKey]
+        const valB = b[sortKey]
+        if (typeof valA === 'string' && typeof valB === 'string') {
+          cmp = valA.localeCompare(valB)
+        } else {
+          cmp = (valA as number) - (valB as number)
+        }
+      }
+      return sortDir === 'asc' ? cmp : -cmp
+    })
+  }, [analysisResult, sortKey, sortDir])
 
   if (loading) return <p>Loading…</p>
 
@@ -208,12 +364,113 @@ export default function ReportDetail() {
           )}
           <button
             type="button"
-            disabled={report.event_count === 0}
+            onClick={() => { void handleRunAnalysis() }}
+            disabled={analysisStatus === 'triggering' || report.event_count === 0}
             title={report.event_count === 0 ? 'Add events first to run analysis' : undefined}
             style={{ marginTop: 16 }}
           >
-            Run Analysis
+            {analysisStatus === 'triggering' ? 'Starting…' : 'Run Analysis'}
           </button>
+          {analysisStatus === 'error' && analysisError && (
+            <p style={{ color: 'red', marginTop: 8 }}>{analysisError}</p>
+          )}
+        </div>
+      )}
+
+      {report.status === 'analyzing' && (
+        <div style={{ marginTop: 24 }}>
+          {pollError !== null ? (
+            <div>
+              <p style={{ color: 'red' }}>{pollError}</p>
+              <button type="button" onClick={() => setPollGeneration((g) => g + 1)}>
+                Keep waiting
+              </button>
+            </div>
+          ) : (
+            <p className="analyzing-pulse">Analyzing… this may take up to 30 seconds.</p>
+          )}
+        </div>
+      )}
+
+      {report.status === 'failed' && (
+        <div style={{ marginTop: 24 }}>
+          <p style={{ color: 'red' }}>Analysis failed. Please try again.</p>
+          <button
+            type="button"
+            onClick={() => { void handleRunAnalysis() }}
+            disabled={analysisStatus === 'triggering'}
+          >
+            {analysisStatus === 'triggering' ? 'Starting…' : 'Retry'}
+          </button>
+        </div>
+      )}
+
+      {report.status === 'completed' && (
+        <div style={{ marginTop: 24 }}>
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 16 }}>
+            <span><strong>Total Events:</strong> {report.event_count.toLocaleString()}</span>
+            {analysisResult && (
+              <>
+                <span><strong>Unique Customers:</strong> {analysisResult.unique_customers.toLocaleString()}</span>
+                {Object.entries(analysisResult.segment_counts)
+                  .sort(([a], [b]) => (SEGMENT_ORDER[a] ?? 99) - (SEGMENT_ORDER[b] ?? 99))
+                  .map(([seg, count]) => (
+                    <span key={seg}><strong>{seg}:</strong> {count}</span>
+                  ))}
+              </>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => { setAnalysisResult(null); void handleRunAnalysis() }}
+            disabled={analysisStatus === 'triggering'}
+            style={{ marginBottom: 16 }}
+          >
+            {analysisStatus === 'triggering' ? 'Starting…' : 'Re-run Analysis'}
+          </button>
+          {analysisResult === null ? (
+            resultsError !== null ? (
+              <div>
+                <p style={{ color: 'red' }}>{resultsError}</p>
+                <button type="button" onClick={loadResults}>Retry</button>
+              </div>
+            ) : (
+              <p>Loading results…</p>
+            )
+          ) : (
+            <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+              <thead>
+                <tr>
+                  {COLUMNS.map(({ key, label }) => (
+                    <th
+                      key={key}
+                      onClick={() => handleSort(key)}
+                      style={{
+                        cursor: 'pointer',
+                        padding: '8px',
+                        textAlign: 'left',
+                        borderBottom: '2px solid #ccc',
+                        userSelect: 'none',
+                      }}
+                    >
+                      {label} {sortKey === key ? (sortDir === 'asc' ? '▲' : '▼') : ''}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {sortedCustomers.map((row) => (
+                  <tr key={row.customer_id}>
+                    {COLUMNS.map(({ key }) => (
+                      <td key={key} style={{ padding: '6px 8px' }}>
+                        {key === 'monetary' ? `$${row.monetary.toFixed(2)}` : row[key]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       )}
 

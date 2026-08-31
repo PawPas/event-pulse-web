@@ -481,28 +481,28 @@ sortDir: 'asc' | 'desc'                            useState('asc')
 
 #### Automated
 
-- [x] 2.1 `uv run pytest tests/test_analysis.py -v` — all 9 integration tests pass
-- [x] 2.2 `uv run pytest tests/ -v` — no regressions
+- [x] 2.1 `uv run pytest tests/test_analysis.py -v` — all 9 integration tests pass — 81849b6
+- [x] 2.2 `uv run pytest tests/ -v` — no regressions — 81849b6
 
 #### Manual
 
-- [x] 2.3 `POST /api/reports/{id}/analysis/run` → 202, `{"status": "analyzing"}`
-- [x] 2.4 Polling `GET /api/reports/{id}` → status transitions to `completed` within 30 seconds
-- [x] 2.5 `GET /api/reports/{id}/analysis/results` → valid JSON with `unique_customers`, `segment_counts`, `customers`
+- [x] 2.3 `POST /api/reports/{id}/analysis/run` → 202, `{"status": "analyzing"}` — 81849b6
+- [x] 2.4 Polling `GET /api/reports/{id}` → status transitions to `completed` within 30 seconds — 81849b6
+- [x] 2.5 `GET /api/reports/{id}/analysis/results` → valid JSON with `unique_customers`, `segment_counts`, `customers` — 81849b6
 
 ### Phase 3: Frontend dashboard
 
 #### Automated
 
-- [ ] 3.1 `cd frontend && npm run lint` — zero errors
+- [x] 3.1 `cd frontend && npm run lint` — zero errors
 
 #### Manual
 
-- [ ] 3.2 "Run Analysis" button triggers analysis and shows Analyzing… state
-- [ ] 3.3 Dashboard appears automatically within 30 seconds without page refresh
-- [ ] 3.4 All 7 table columns render with correct data
-- [ ] 3.5 Column header clicks sort ascending/descending with arrow indicator
-- [ ] 3.6 Default sort groups rows by segment in PRD priority order
-- [ ] 3.7 "Re-run Analysis" button visible in completed state; clicking re-runs and refreshes results
-- [ ] 3.8 Failed state shows red error message and Retry button
-- [ ] 3.9 monetary values display with $ prefix and 2 decimal places
+- [x] 3.2 "Run Analysis" button triggers analysis and shows Analyzing… state
+- [x] 3.3 Dashboard appears automatically within 30 seconds without page refresh
+- [x] 3.4 All 7 table columns render with correct data
+- [x] 3.5 Column header clicks sort ascending/descending with arrow indicator
+- [x] 3.6 Default sort groups rows by segment in PRD priority order
+- [x] 3.7 "Re-run Analysis" button visible in completed state; clicking re-runs and refreshes results
+- [x] 3.8 Failed state shows red error message and Retry button
+- [x] 3.9 monetary values display with $ prefix and 2 decimal places
