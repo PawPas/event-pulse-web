@@ -3,7 +3,7 @@ project: "EventPulse Web"
 version: 1
 status: draft
 created: 2026-07-17
-updated: 2026-07-22
+updated: 2026-08-31
 prd_version: 1
 main_goal: market-feedback
 top_blocker: capacity
@@ -35,7 +35,7 @@ Small and medium e-commerce and SaaS product managers have customer event data i
 | S-02 | report-management      | create a report, view the list, open it, and delete it         | S-01          | FR-004, FR-005, FR-006, FR-007 | done     |
 | S-03 | event-file-upload      | add customer events to a report by uploading CSV or JSON       | S-02          | FR-008                         | done     |
 | S-04 | sample-generator       | add sample customer events to a report in one click            | S-02          | FR-009                         | done     |
-| S-05 | rfm-analysis-dashboard | run RFM analysis and view a sortable results dashboard         | S-03          | FR-010, FR-011, FR-012, US-01  | proposed |
+| S-05 | rfm-analysis-dashboard | run RFM analysis and view a sortable results dashboard         | S-03          | FR-010, FR-011, FR-012, US-01  | done |
 
 ## Streams
 
@@ -149,7 +149,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Async execution strategy: FastAPI BackgroundTasks + DB status polling vs a dedicated Railway worker service + queue. Owner: team. Block: no (BackgroundTasks is sufficient for MVP given the 30-second NFR at ≤200k events; a separate worker can be promoted later if load justifies it).
 - **Risk:** RFM computation must match PRD §Business Logic exactly — quintile-based scoring, priority-ordered segment assignment rules, purchase-only Monetary dimension, deterministic output; the PRD §Business Logic is the acceptance test oracle; re-run (FR-011) must append new events to the existing set before re-scoring, not replace the prior events
-- **Status:** proposed
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -188,3 +188,4 @@ Items from PRD §Non-Goals — deferred from MVP scope.
 - **S-02: user can create a named report with an optional description, view their list of reports, open a report to see its detail in the pre-analysis state, and delete a report with a mandatory confirmation step.** — Archived 2026-07-20 → `context/archive/2026-07-20-report-management/`. Lesson: —.
 - **S-03: add customer events to a report by uploading CSV or JSON** — Archived 2026-07-21 → `context/archive/2026-07-20-event-file-upload/`. Lesson: —.
 - **S-04: add sample customer events to a report in one click** — Archived 2026-07-22 → `context/archive/2026-07-21-sample-generator/`. Lesson: —.
+- **S-05: user can click "Run Analysis" on a report that has events, see a status transition from "Analyzing…" to "Completed", and view a results dashboard showing total event count, unique customer count, and a sortable RFM results table with each customer's R/F/M scores and segment assignment (Champions, Loyal Customers, Potential Loyalists, At Risk, Hibernating, Others).** — Archived 2026-08-31 → `context/archive/2026-07-22-rfm-analysis-dashboard/`. Lesson: —.
