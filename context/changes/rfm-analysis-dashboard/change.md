@@ -1,9 +1,9 @@
 ---
 change_id: rfm-analysis-dashboard
 title: RFM analysis dashboard
-status: implementing
+status: impl_reviewed
 created: 2026-07-22
-updated: 2026-07-24
+updated: 2026-08-31
 archived_at: null
 ---
 
