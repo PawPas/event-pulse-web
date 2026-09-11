@@ -1,0 +1,79 @@
+name: PR Review (impl-review-ci)
+
+# Uruchamia agenta LLM (Claude Code Action) na każdym pull requeście: skill
+# 10x-impl-review-ci porównuje zmianę z jej planem, zapisuje raport w
+# context/changes/<id>/reviews/impl-review.md i publikuje komentarz w PR.
+# Wymaga sekretu ANTHROPIC_API_KEY w ustawieniach repo.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+
+permissions:
+  contents: write        # commit raportu na branch PR-a
+  pull-requests: write   # komentarz + inline review
+  issues: write          # komentarz podsumowujący (PR summary = issue comment)
+
+concurrency:
+  group: impl-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  impl-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (pełna historia dla merge-base diff)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install project deps (żeby review mogło uruchomić testy)
+        run: uv sync --dev
+
+      - name: Udostępnij skill agentowi
+        run: |
+          mkdir -p "$HOME/.claude/skills"
+          cp -r .claude/skills/10x-impl-review-ci "$HOME/.claude/skills/"
+
+      - name: Uruchom review w CI
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            /10x-impl-review-ci
+            Działasz w CI na pull requeście. Wykonaj skill: znajdź plan,
+            porównaj z nim implementację z PR-a, zapisz raport i opublikuj
+            komentarz w PR.
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+
+      - name: Bramka werdyktu (fail przy REJECTED, chyba że label override)
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'impl-review-override') }}
+        run: |
+          # Raport commituje krok wyżej; szukamy go w najnowszym commicie,
+          # z fallbackiem na dowolny raport w drzewie. Brak raportu = brak
+          # gate (np. PR bez planu — skill kończy się neutralnie).
+          REPORT=$(git show --name-only --format= HEAD 2>/dev/null | grep -m1 'reviews/impl-review.md' || true)
+          if [ -z "$REPORT" ] || [ ! -f "$REPORT" ]; then
+            REPORT=$(git ls-files '**/context/changes/**/reviews/impl-review.md' | head -1 || true)
+          fi
+          if [ -z "$REPORT" ] || [ ! -f "$REPORT" ]; then
+            echo "Brak raportu impl-review — pomijam bramkę."
+            exit 0
+          fi
+          echo "Raport: $REPORT"
+          if grep -qE '^\-?\s*\*\*Verdict\*\*:\s*REJECTED' "$REPORT"; then
+            echo "::error::Werdykt REJECTED — dodaj label 'impl-review-override', by ominąć."
+            exit 1
+          fi
+          echo "Werdykt inny niż REJECTED — bramka przechodzi."
