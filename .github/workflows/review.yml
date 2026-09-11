@@ -48,12 +48,17 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          show_full_output: true
           prompt: |
             /10x-impl-review-ci
             Działasz w CI na pull requeście. Wykonaj skill: znajdź plan,
             porównaj z nim implementację z PR-a, zapisz raport i opublikuj
             komentarz w PR.
         env:
+          # gh CLI wewnątrz skilla potrzebuje tokenu w ENV — bez tego odczyt
+          # planu z opisu PR-a i publikacja komentarza przez gh po cichu padają.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           GITHUB_BASE_REF: ${{ github.base_ref }}
 

@@ -69,8 +69,8 @@ Przed dotknięciem kodu produktu przybijamy **obecne** zachowanie niepokrytej ś
 - Mechanizmy (testy) zielone; żadne wymuszanie nie jest włączane niejawnie.
 
 ## Progress
-- [ ] 1. Charakteryzacja ścieżki awarii — test wymuszający wyjątek, pinuje status=failed + obecne 404
-- [ ] 2. Kontrakt GET /results: 409 dla failed, 404 zachowane dla created; testy zaktualizowane
+- [x] 1. Charakteryzacja ścieżki awarii — test wymuszający wyjątek, pinuje status=failed + obecne 404
+- [x] 2. Kontrakt GET /results: 409 dla failed, 404 zachowane dla created; testy zaktualizowane
 - [ ] 3. (opcjonalna) UI stanu failed w ReportDetail + weryfikacja ręczna
 
 ## Uwaga o realizacji
