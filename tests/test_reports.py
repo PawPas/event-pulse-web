@@ -79,9 +79,84 @@ def test_get_report_not_found(test_client, auth_token):
     assert response.status_code == 404
 
 
+def test_update_report_success(test_client, auth_token):
+    response = test_client.patch(
+        f"/api/reports/{_state['report_id']}",
+        json={"name": "Q4 Report (renamed)", "description": "After review"},
+        headers={"Authorization": f"Bearer {auth_token}"},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["name"] == "Q4 Report (renamed)"
+    assert data["description"] == "After review"
+
+    get_response = test_client.get(
+        f"/api/reports/{_state['report_id']}",
+        headers={"Authorization": f"Bearer {auth_token}"},
+    )
+    assert get_response.status_code == 200
+    assert get_response.json()["name"] == "Q4 Report (renamed)"
+
+
+def test_update_report_partial(test_client, auth_token):
+    response = test_client.patch(
+        f"/api/reports/{_state['report_id']}",
+        json={"description": None},
+        headers={"Authorization": f"Bearer {auth_token}"},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["name"] == "Q4 Report (renamed)"
+    assert data["description"] is None
+
+
+def test_update_report_empty_payload(test_client, auth_token):
+    response = test_client.patch(
+        f"/api/reports/{_state['report_id']}",
+        json={},
+        headers={"Authorization": f"Bearer {auth_token}"},
+    )
+    assert response.status_code == 422
+
+
+def test_update_report_null_name(test_client, auth_token):
+    response = test_client.patch(
+        f"/api/reports/{_state['report_id']}",
+        json={"name": None},
+        headers={"Authorization": f"Bearer {auth_token}"},
+    )
+    assert response.status_code == 422
+
+
+def test_update_report_not_found(test_client, auth_token):
+    response = test_client.patch(
+        "/api/reports/00000000-0000-0000-0000-000000000000",
+        json={"name": "X"},
+        headers={"Authorization": f"Bearer {auth_token}"},
+    )
+    assert response.status_code == 404
+
+
+def test_update_report_unauthenticated(test_client):
+    response = test_client.patch(
+        f"/api/reports/{_state['report_id']}",
+        json={"name": "X"},
+    )
+    assert response.status_code == 401
+
+
 def test_isolation_get(test_client, auth_token_b):
     response = test_client.get(
         f"/api/reports/{_state['report_id']}",
+        headers={"Authorization": f"Bearer {auth_token_b}"},
+    )
+    assert response.status_code == 404
+
+
+def test_isolation_update(test_client, auth_token_b):
+    response = test_client.patch(
+        f"/api/reports/{_state['report_id']}",
+        json={"name": "Hijacked"},
         headers={"Authorization": f"Bearer {auth_token_b}"},
     )
     assert response.status_code == 404

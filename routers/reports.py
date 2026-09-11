@@ -20,6 +20,11 @@ class CreateReportRequest(BaseModel):
     description: str | None = None
 
 
+class UpdateReportRequest(BaseModel):
+    name: str | None = None
+    description: str | None = None
+
+
 class ReportResponse(BaseModel):
     id: str
     name: str
@@ -109,6 +114,43 @@ async def get_report(
     row = (await db.execute(stmt)).one_or_none()
     if row is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Report not found")
+    return _row_to_response(row)
+
+
+@router.patch("/{report_id}", status_code=status.HTTP_200_OK, response_model=ReportResponse)
+async def update_report(
+    report_id: UUID,
+    payload: UpdateReportRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: TokenPayload = Depends(get_current_user),
+) -> ReportResponse:
+    result = await db.execute(
+        select(Report).where(Report.id == report_id, Report.user_id == UUID(current_user.sub))
+    )
+    report = result.scalar_one_or_none()
+    if report is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Report not found")
+    updates = payload.model_dump(exclude_unset=True)
+    if not updates:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="No fields to update",
+        )
+    if "name" in updates and updates["name"] is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="name cannot be null",
+        )
+    for field, value in updates.items():
+        setattr(report, field, value)
+    await db.commit()
+    await db.refresh(report)
+    event_count_sq = _event_count_sq()
+    stmt = (
+        select(Report, event_count_sq.label("event_count"))
+        .where(Report.id == report_id)
+    )
+    row = (await db.execute(stmt)).one()
     return _row_to_response(row)
 
 
