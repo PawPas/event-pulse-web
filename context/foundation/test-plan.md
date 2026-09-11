@@ -67,11 +67,31 @@ orchestrator updates Status as artifacts appear on disk.
 
 | # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
 |---|------------|------------------|----------------|-------------|--------|----------------|
-| 1 | Isolation matrix completion | Prove every resource endpoint rejects another user's resources, not just reports | #1 | integration | not started | — |
-| 2 | Import integrity and input boundaries | Prove no silent record loss and no 500s at inbound boundaries | #3, #5 | integration | not started | — |
+| 1 | Isolation matrix completion | Prove every resource endpoint rejects another user's resources, not just reports | #1 | integration | complete | — (pre-plan, S-01…S-05) |
+| 2 | Import integrity and input boundaries | Prove no silent record loss and no 500s at inbound boundaries | #3, #5 | integration | complete | — (pre-plan, S-03) |
 | 3 | RFM oracle and analysis failure paths | Prove results match PRD-derived fixtures and failures surface as a visible `failed` state | #2, #6 | unit + integration | not started | — |
 | 4 | Frontend confidence layer | Prove app startup and the auth/analysis UI flows survive bad state without a browser | #4, #6 | component/integration | not started | — |
 | 5 | Quality-gates wiring | Lock the floor: lint + typecheck + scoped tests at commit, full suites before push/CI | cross-cutting | gates | not started | — |
+
+### Coverage snapshot (2026-09-11)
+
+This plan was authored after the MVP shipped, so several phases were already
+satisfied by tests delivered during the feature slices (S-01…S-05) — those are
+marked `complete` above with no dedicated rollout change folder. Current state on
+`main`, risk by risk:
+
+| Risk | Covered on `main`? | Evidence |
+|------|--------------------|----------|
+| #1 (IDOR / cross-user access) | ✅ yes | `tests/test_reports.py::test_isolation_get/update/delete`, `test_analysis.py::test_run_wrong_user`, `test_events.py::test_upload_wrong_user_report` |
+| #3 (silent import loss) | ✅ yes | `test_events.py`: valid uploads assert `events_added == N` and `after == before + 1`; oversize → 400; missing/invalid fields → 422 before any write |
+| #5 (bad input → 4xx not 500) | ✅ yes | `test_events.py`: `unsupported_extension`, `json_not_array`, `csv_missing_header`, `invalid_timestamp/amount`, `empty_file` all assert 4xx |
+| #2 (wrong RFM scores/segments) | ✅ yes | `tests/test_rfm_algorithm.py` (11 tests): quintiles, ties, purchase-only Monetary, determinism, single/empty |
+| #6 (invisible async failure) | ⏳ pending | tests exist on branch `impl/o1-visible-failed` (PR #1, unmerged): `test_analysis_failure_sets_failed_status`, `test_results_on_failed_returns_409` |
+| #4 (frontend startup/auth flow) | ⏳ pending | `frontend/src/store/authSlice.test.ts`, `utils/safeJsonParse.test.ts` exist locally but are **untracked** (not committed to `main`) |
+
+So Phase 3 is half-done (#2 covered, #6 waiting on PR #1), Phase 4 is untracked,
+and Phase 5 has its CI half built (the `10x-impl-review-ci` pipeline in
+`.github/workflows/review.yml`) but no commit/push/pre-commit gates yet.
 
 ## 4. Stack
 
