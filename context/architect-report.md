@@ -93,21 +93,21 @@ na domenowy `UserId` raz, na granicy Auth. Kryterium sukcesu policzalne: `grep U
 - **Cel researchu wybrałem świadomie:** przepływ analizy, bo mapa wskazała go jako strefę
   ryzyka #1, a nie dlatego, że jest największy. AI zaproponowało trzy sub-agenty; ja
   zdecydowałem o granicy (tylko ta ścieżka, bez `compute_rfm` internals).
-- **Zróżnicowałem dług zamierzony wg tego, czy jest „żywy":** sub-agenci sugerowali kolejkę/
+- **Zróżnicowałem dług zamierzony wg tego, czy jest "tani":** sub-agenci sugerowali kolejkę/
   worker (O4) i wspólny kontrakt typów (O3). **O4 zostaje poza zakresem** — jego jedyne realne
   ryzyko (zombie `analyzing` przy restarcie) pokrywa taniej O1, a plan S-05 jawnie wybrał
   BackgroundTasks „do czasu, aż obciążenie to uzasadni". **O3 świadomie odkładam, ale nie
-  bezterminowo** — kontrakt wyniku jest dziś zamrożony (obszar analizy nietykany od 31.08),
-  więc dryf typów nie jest żywym ryzykiem; O3 zrobię oportunistycznie, spięte z najbliższą
-  zmianą kształtu wyniku RFM (np. FR-012b), gdy `openapi-typescript` będzie tanim dokładem.
+  bezterminowo** — kontrakt wyniku jest do dziś zamrożony (obszar analizy nietykany od 31.08),
+  więc dryf typów nie jest żywym ryzykiem; O3 zrobię przy okazji najblizszej
+  zmiany w RFM (np. FR-012b), gdy `openapi-typescript` mozna bedzie latwo dodać
 - **Wybór O1 jako „jednej bezpiecznej zmiany" to moja decyzja** oparta na wartość÷ryzyko:
   najwyższy impact przy najwęższym blast radiusie. Kontrpytanie „czy to nie przebudowa
   error-handlingu?" rozstrzygnąłem: nie — ścieżka `failed` już istnieje, zmieniam tylko
   kontrakt odczytu i dokładam testy (guard, nie przebudowa).
 - **Weryfikowałem twierdzenia AI, nie przyjmowałem ich na wiarę:** grep obalił „28 testów"
-  (realnie 11) i doprecyzował „3/6 segmentów". To zmieniło ton sekcji Technical debt.
+  (realnie 11) i doprecyzował „3/6 segmentów". To zmieniło Technical debt.
 - **Niezmiennik własności uznałem za groźniejszy niż poprawność RFM** mimo że oba są HIGH —
-  bo RFM jest dobrze odizolowany (1 miejsce), a własność rozsmarowana po 16 punktach bez
+  bo RFM jest dobrze odizolowany (1 miejsce), a własność obecna w 16 punktach bez
   strażnika. To ocena ryzyka, nie streszczenie kodu.
 
 ---
