@@ -20,3 +20,12 @@ frontend/.env*
 
 # macOS
 .DS_Store
+
+# 10xDevs course tooling — kept local only.
+# Exception: 10x-impl-review-ci stays tracked (the CI review pipeline copies it on the runner).
+.claude/skills/*
+!.claude/skills/10x-impl-review-ci/
+.claude/prompts/
+.claude/config-templates/
+.claude/.10x-cli-manifest.json
+.claude/commands/
