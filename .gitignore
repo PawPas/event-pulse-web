@@ -29,3 +29,10 @@ frontend/.env*
 .claude/config-templates/
 .claude/.10x-cli-manifest.json
 .claude/commands/
+
+# 10xDevs course materials — reference only, kept local
+context/materials/
+
+# Other local agent tooling
+.agents/
+.codex/
