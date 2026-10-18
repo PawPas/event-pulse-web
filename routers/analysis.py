@@ -149,6 +149,12 @@ async def get_analysis_results(
     if report is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Report not found")
 
+    if report.status == ReportStatus.failed:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Analysis failed — please re-run",
+        )
+
     if report.analysis_result is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

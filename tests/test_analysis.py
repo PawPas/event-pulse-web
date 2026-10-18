@@ -254,3 +254,69 @@ def test_rerun_completes(test_client, auth_token, report_id):
     assert resp.status_code == 200
     data = resp.json()
     assert data["unique_customers"] > 0
+
+
+# ---------------------------------------------------------------------------
+# Failure path (O1 — visible `failed` state)
+# ---------------------------------------------------------------------------
+
+
+def _fresh_report_with_events(test_client, auth_token: str) -> str:
+    resp = test_client.post(
+        "/api/reports/",
+        json={"name": "Failure Path Report"},
+        headers=_headers(auth_token),
+    )
+    assert resp.status_code == 201
+    rid = resp.json()["id"]
+    resp = test_client.post(
+        f"/api/reports/{rid}/events/sample",
+        headers=_headers(auth_token),
+    )
+    assert resp.status_code == 200
+    return rid
+
+
+def test_analysis_failure_sets_failed_status(test_client, auth_token, monkeypatch):
+    """When compute_rfm raises, the background task must persist status=failed —
+    not leave the report stuck in 'analyzing' (test-plan Risk #6)."""
+    rid = _fresh_report_with_events(test_client, auth_token)
+
+    def _boom(*args, **kwargs):
+        raise ValueError("forced failure for test")
+
+    # Patch the symbol as imported into routers.analysis (analysis.py:15),
+    # which is what _run_analysis actually calls.
+    monkeypatch.setattr("routers.analysis.compute_rfm", _boom)
+
+    resp = test_client.post(
+        f"/api/reports/{rid}/analysis/run",
+        headers=_headers(auth_token),
+    )
+    assert resp.status_code == 202
+
+    final = _poll_until_done(test_client, auth_token, rid)
+    assert final["status"] == "failed"
+
+
+def test_results_on_failed_returns_409(test_client, auth_token, monkeypatch):
+    """A failed analysis must be distinguishable from 'never run' — 409, not the
+    same 404 that a fresh report returns."""
+    rid = _fresh_report_with_events(test_client, auth_token)
+
+    def _boom(*args, **kwargs):
+        raise ValueError("forced failure for test")
+
+    monkeypatch.setattr("routers.analysis.compute_rfm", _boom)
+    test_client.post(
+        f"/api/reports/{rid}/analysis/run",
+        headers=_headers(auth_token),
+    )
+    _poll_until_done(test_client, auth_token, rid)
+
+    resp = test_client.get(
+        f"/api/reports/{rid}/analysis/results",
+        headers=_headers(auth_token),
+    )
+    assert resp.status_code == 409
+    assert "failed" in resp.json()["detail"].lower()
