@@ -1,5 +1,7 @@
 # EventPulse Web
 
+Repository: https://github.com/PawPas/event-pulse-web
+
 EventPulse Web turns raw customer event exports (CSV/JSON) into an actionable RFM
 segmentation report in minutes. It targets small e-commerce and SaaS teams that
 have event data — product views, purchases, logins — but no data team or budget
